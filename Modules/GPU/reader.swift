@@ -34,13 +34,13 @@ internal class InfoReader: Reader<GPUs> {
         
         devices.forEach { (dict: NSDictionary) in
             guard let deviceID = dict["device-id"] as? Data, let vendorID = dict["vendor-id"] as? Data else {
-                print("device-id or vendor-id not found", to: &Log.log)
+                os_log(.error, log: log, "device-id or vendor-id not found")
                 return
             }
             let pci = "0x" + Data([deviceID[1], deviceID[0], vendorID[1], vendorID[0]]).map { String(format: "%02hhX", $0) }.joined().lowercased()
             
             guard let modelData = dict["model"] as? Data, let modelName = String(data: modelData, encoding: .ascii) else {
-                print("GPU model not found", to: &Log.log)
+                os_log(.error, log: log, "GPU model not found")
                 return
             }
             let model = modelName.replacingOccurrences(of: "\0", with: "")
@@ -53,70 +53,79 @@ internal class InfoReader: Reader<GPUs> {
         guard let accelerators = fetchIOService(kIOAcceleratorClassName) else {
             return
         }
-        
-        for (i, _) in self.devices.enumerated() {
-            self.devices[i].used = false
-        }
+        var devices = self.devices
         
         accelerators.forEach { (accelerator: NSDictionary) in
             guard let IOClass = accelerator.object(forKey: "IOClass") as? String else {
-                print("IOClass not found", to: &Log.log)
+                os_log(.error, log: log, "IOClass not found")
                 return
             }
             
             guard let stats = accelerator["PerformanceStatistics"] as? [String:Any] else {
-                print("PerformanceStatistics not found", to: &Log.log)
+                os_log(.error, log: log, "PerformanceStatistics not found")
                 return
             }
             
             var model: String = ""
             let accMatch = (accelerator["IOPCIMatch"] as? String ?? accelerator["IOPCIPrimaryMatch"] as? String ?? "").lowercased()
             
-            for (i, device) in self.devices.enumerated() {
-                let matched = accMatch.range(of: device.pci)
-                if matched != nil && !device.used {
+            for (i, device) in devices.enumerated() {
+                if accMatch.range(of: device.pci) != nil && !device.used {
                     model = device.model
-                    self.devices[i].used = true
-                } else if device.used {
-                    print("Device `\(device.model)` with pci `\(device.pci)` is already used", to: &Log.log)
-                } else {
-                    print("`\(device.pci)` and `\(accMatch)` not match", to: &Log.log)
+                    devices[i].used = true
+                    break
                 }
+            }
+            
+            let ioClass = IOClass.lowercased()
+            var predictModel = ""
+            var type: GPU_types = .unknown
+            
+            let utilization = stats["Device Utilization %"] as? Int ?? stats["GPU Activity(%)"] as? Int ?? 0
+            var temperature = stats["Temperature(C)"] as? Int ?? 0
+            
+            if ioClass == "nvaccelerator" || ioClass.contains("nvidia") { // nvidia
+                predictModel = "Nvidia Graphics"
+                type = .discrete
+            } else if ioClass.contains("amd") { // amd
+                predictModel = "AMD Graphics"
+                type = .discrete
+                
+                if temperature == 0 {
+                    if let tmp = self.smc?.pointee.getValue("TGDD") {
+                        temperature = Int(tmp)
+                    }
+                }
+            } else if ioClass.contains("intel") { // intel
+                predictModel = "Intel Graphics"
+                type = .integrated
+                
+                if temperature == 0 {
+                    if let tmp = self.smc?.pointee.getValue("TCGC") {
+                        temperature = Int(tmp)
+                    }
+                }
+            } else if ioClass.contains("agx") { // apple
+                predictModel = stats["model"] as? String ?? "Apple Graphics"
+                type = .integrated
+            } else {
+                predictModel = "Unknown"
+                type = .unknown
             }
             
             if model == "" {
-                let ioClass = IOClass.lowercased()
-                if ioClass == "nvAccelerator" || ioClass.contains("nvidia") {
-                    model = "Nvidia Graphics"
-                } else if ioClass.contains("amd") {
-                    model = "AMD Graphics"
-                } else if ioClass.contains("intel") {
-                    model = "Intel Graphics"
-                } else {
-                    model = "Unknown"
-                }
+                model = predictModel
             }
             
             if self.gpus.list.first(where: { $0.model == model }) == nil {
-                self.gpus.list.append(GPU_Info(model: model, IOClass: IOClass))
+                self.gpus.list.append(GPU_Info(model: model, IOClass: IOClass, type: type.rawValue))
             }
             guard let idx = self.gpus.list.firstIndex(where: { $0.model == model }) else {
                 return
             }
             
-            let utilization = stats["Device Utilization %"] as? Int ?? stats["GPU Activity(%)"] as? Int ?? 0
-            var temperature = stats["Temperature(C)"] as? Int ?? 0
-            
-            if IOClass == "IntelAccelerator" && temperature == 0 {
-                if let tmp = self.smc?.pointee.getValue("TCGC") {
-                    temperature = Int(tmp)
-                } else if let tmp = self.smc?.pointee.getValue("TG0D") {
-                    temperature = Int(tmp)
-                }
-            }
-            
-            if let agcInfo = accelerator["AGCInfo"] as? [String:Int] {
-                self.gpus.list[idx].state = agcInfo["poweredOffByAGC"] == 0
+            if let agcInfo = accelerator["AGCInfo"] as? [String:Int], let state = agcInfo["poweredOffByAGC"] {
+                self.gpus.list[idx].state = state == 0
             }
             
             self.gpus.list[idx].utilization = utilization == 0 ? 0 : Double(utilization)/100

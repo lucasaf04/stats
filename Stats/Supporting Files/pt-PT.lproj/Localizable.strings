@@ -2,11 +2,11 @@
 //  Localizable.strings
 //  Stats
 //
-//  Created by Marcelo Chaves on 11/11/2020.
+//  Created by Rafael Fernandes on 30/12/2020.
 //  Using Swift 5.0.
-//  Running on macOS 10.15.
+//  Running on macOS 11.1.
 //
-//  Copyright © 2020 Marcelo Chaves. All rights reserved.
+//  Copyright © 2020 Rafael Fernandes. All rights reserved.
 //
 
 // Words
@@ -17,7 +17,7 @@
 "Graphics" = "Gráficos";
 "Disk" = "Disco";
 "Close" = "Fechar";
-"Download" = "Baixar";
+"Download" = "Fazer download";
 "Install" = "Instalar";
 "Cancel" = "Cancelar";
 "Unavailable" = "Indisponível";
@@ -35,28 +35,28 @@
 // Alerts
 "New version available" = "Nova versão disponível";
 "Click to install the new version of Stats" = "Clique para instalar a nova versão do Stats";
-"Successfully updated" = "Atualizado com sucesso";
+"Successfully updated" = "Atualização feita com sucesso";
 "Stats was updated to v" = "Stats foi atualizado para v%0";
 
 // Settings
 "Open Activity Monitor" = "Abrir Monitor de Atividades";
 "Report a bug" = "Reportar um erro";
-"Close application" = "Fechar aplicativo";
-"Open application settings" = "Abrir configurações do aplicativo";
+"Close application" = "Fechar aplicação";
+"Open application settings" = "Abrir configurações da aplicação";
 "Open moduleName settings" = "Abrir configurações do %0";
 
 // Application settings
-"Update application" = "Atualizar aplicativo";
-"Check for updates" = "Verificar se há atualizações";
-"Check for update" = "Verificar atualização";
-"Show icon in dock" = "Mostrar ícone no dock";
-"Start at login" = "Inicie no login";
+"Update application" = "Atualizar aplicação";
+"Check for updates" = "Procurar por atualizações";
+"Check for update" = "Procurar atualização";
+"Show icon in dock" = "Mostrar ícone na doca";
+"Start at login" = "Iniciar durante login";
 
 // Update
 "The latest version of Stats installed" = "A versão mais recente do Stats instalada";
-"Downloading..." = "Baixando...";
-"Current version: " = "Versão atual:  ";
-"Latest version: " = "Última versão:    ";
+"Downloading..." = "Descarregando...";
+"Current version: " = "Versão atual: ";
+"Latest version: " = "Última versão: ";
 
 // Widgets
 "Color" = "Cor";
@@ -65,7 +65,7 @@
 "Frame" = "Quadro";
 "Value" = "Valor";
 "Colorize" = "Colorir";
-"Colorize value" = "Valor colorido";
+"Colorize value" = "Valor da colorização";
 "Additional information" = "Informação adicional";
 "Reverse values order" = "Ordem inversa dos valores";
 "Base" = "Base";
@@ -77,20 +77,20 @@
 "Open module settings" = "Abrir configurações do módulo";
 "Select widget" = "Selecionar widget %0";
 "Update interval" = "Intervalo de atualização";
-"Usage history" = "Histórico de uso";
+"Usage history" = "Histórial de utilização";
 "Details" = "Detalhes";
-"Top processes" = "Principais processos";
+"Top processes" = "Processos principais";
 "Pictogram" = "Pictograma";
 
 // Modules
 "Number of top processes" = "Número de processos principais";
 
 // CPU
-"CPU usage" = "Utilização da CPU";
-"CPU temperature" = "Temperatura da CPU";
-"CPU frequency" = "Frequência da CPU";
+"CPU usage" = "Utilização do CPU";
+"CPU temperature" = "Temperatura do CPU";
+"CPU frequency" = "Frequência do CPU";
 "System" = "Sistema";
-"User" = "Usuário";
+"User" = "Utilizador";
 "Idle" = "Parado";
 "Show usage per core" = "Mostrar uso por núcleo";
 "Show hyper-threading cores" = "Mostrar núcleos hyper-threading";
@@ -102,20 +102,20 @@
 "GPU utilization" = "Utilização da GPU";
 
 // Memory
-"Memory usage" = "Memória usada";
+"Memory usage" = "Memória utilizada";
 "Memory pressure" = "Pressão de memória";
 "Total" = "Total";
-"Used" = "Usado";
+"Used" = "Utilizado";
 "App" = "App";
-"Wired" = "Com fio";
-"Compressed" = "Comprimido";
+"Wired" = "Por fio";
+"Compressed" = "Compresso";
 "Free" = "Livre";
 "Swap" = "Swap";
 
 // Disk
 "Show removable disks" = "Mostrar discos removíveis";
-"Used disk memory" = "Usado %0 de %1";
-"Free disk memory" = "Libre %0 de %1";
+"Used disk memory" = "Utilizado %0 de %1";
+"Free disk memory" = "Livre %0 de %1";
 "Disk to show" = "Disco para mostrar";
 "Open disk" = "Disco aberto";
 "Switch view" = "Mudar de vista";
@@ -127,7 +127,7 @@
 
 // Network
 "Uploading" = "Enviando";
-"Downloading" = "Baixando";
+"Downloading" = "Descarregando";
 "Public IP" = "IP Público";
 "Local IP" = "IP Local";
 "Interface" = "Interface";
@@ -156,15 +156,15 @@
 "Temperature" = "Temperatura";
 "Power adapter" = "Adaptador de energia";
 "Power" = "Energia";
-"Is charging" = "Está carregando";
-"Time to discharge" = "Tempo de descarregar";
-"Time to charge" = "Tempo de carregar";
+"Is charging" = "Está a carregar";
+"Time to discharge" = "Tempo até descarregar";
+"Time to charge" = "Tempo até carregar";
 "Calculating" = "Calculando";
 "Fully charged" = "Completamente carregado";
 "Not connected" = "Não conectado";
 "Low level notification" = "Notificação de baixo nível";
 "Low battery" = "Bateria fraca";
-"Battery remaining" = "%0% restante";
+"Battery remaining" = "%0% bateria restante";
 "Percentage" = "Percentagem";
 "Percentage and time" = "Porcentagem e tempo";
 "Time and percentage" = "Tempo e porcentagem";
@@ -172,4 +172,4 @@
 "Hide additional information when full" = "Ocultar informações adicionais quando estiver cheia";
 
 // Fans
-"Fans" = "Fans";
+"Fans" = "Ventoinhas";

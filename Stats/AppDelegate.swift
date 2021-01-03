@@ -11,7 +11,7 @@ import os.log
 import StatsKit
 import ModuleKit
 import CPU
-import Memory
+import RAM
 import Disk
 import Net
 import Battery
@@ -21,7 +21,6 @@ import Fans
 
 var store: Store = Store()
 let updater = macAppUpdater(user: "exelban", repo: "stats")
-let systemKit: SystemKit = SystemKit()
 var smc: SMCService = SMCService()
 var modules: [Module] = [
     Battery(&store),
@@ -29,7 +28,7 @@ var modules: [Module] = [
     Fans(&store, &smc),
     Sensors(&store, &smc),
     Disk(&store),
-    Memory(&store),
+    RAM(&store),
     GPU(&store, &smc),
     CPU(&store, &smc),
 ].reversed()
@@ -43,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         let startingPoint = Date()
-        print("------------", startingPoint, "------------", to: &Log.log)
+//        print("------------", startingPoint, "------------", to: &Log.log)
         
         self.parseArguments()
         
